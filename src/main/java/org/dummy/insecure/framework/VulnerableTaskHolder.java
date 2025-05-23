@@ -57,20 +57,11 @@ public class VulnerableTaskHolder implements Serializable {
       throw new IllegalArgumentException("outdated");
     }
 
-    // condition is here to prevent you from destroying the goat altogether
+    // Avoid executing arbitrary commands during deserialization
     if ((taskAction.startsWith("sleep") || taskAction.startsWith("ping"))
         && taskAction.length() < 22) {
       log.info("about to execute: {}", taskAction);
-      try {
-        Process p = Runtime.getRuntime().exec(taskAction);
-        BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        String line = null;
-        while ((line = in.readLine()) != null) {
-          log.info(line);
-        }
-      } catch (IOException e) {
-        log.error("IO Exception", e);
-      }
+      // Command execution disabled for safety
     }
   }
 }

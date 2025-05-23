@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.apache.commons.text.StringEscapeUtils;
 
 @RestController
 @AssignmentHints(
@@ -71,9 +72,10 @@ public class CrossSiteScriptingLesson5a extends AssignmentEndpoint {
             + QTY4.intValue() * 299.99;
 
     userSessionData.setValue("xss-reflected1-complete", "false");
+    String safeField1 = StringEscapeUtils.escapeHtml4(field1);
     StringBuilder cart = new StringBuilder();
     cart.append("Thank you for shopping at WebGoat. <br />Your support is appreciated<hr />");
-    cart.append("<p>We have charged credit card:" + field1 + "<br />");
+    cart.append("<p>We have charged credit card:" + safeField1 + "<br />");
     cart.append("                             ------------------- <br />");
     cart.append("                               $" + totalSale);
 
