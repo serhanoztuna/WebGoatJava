@@ -88,8 +88,12 @@ public class ProfileUploadRetrieval extends AssignmentEndpoint {
     }
     try {
       var id = request.getParameter("id");
-      var catPicture =
-          new File(catPicturesDirectory, (id == null ? RandomUtils.nextInt(1, 11) : id) + ".jpg");
+      String fileName = (id == null ? RandomUtils.nextInt(1, 11) + ".jpg" : id + ".jpg");
+      var catPicture = new File(catPicturesDirectory, fileName);
+      var canonicalCatPicture = catPicture.getCanonicalFile();
+      if (!canonicalCatPicture.getPath().startsWith(catPicturesDirectory.getCanonicalPath())) {
+        return ResponseEntity.badRequest().body("Invalid file path");
+      }
 
       if (catPicture.getName().toLowerCase().contains("path-traversal-secret.jpg")) {
         return ResponseEntity.ok()
